@@ -22,7 +22,7 @@ primary_key = ['index_id',
 'market_data_type'
 ]
 
-unimportant = ['extraction_id']
+unimportant_cols = ['extraction_id']
 
 diff_data = []
 
