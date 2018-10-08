@@ -84,10 +84,36 @@ def orphan_cols(df_pre, df_post):
             is_post_orphan = True
         
         return False, is_pre_orphan, is_post_orphan
-    
-    
+
+
 def orphan_rows(df_pre, df_post):
-    pass
+    pre_rows = set(df_pre.index.copy())
+    post_rows = set(df_post.index.copy())
+    
+    
+    orphan_rows_pre = pre_rows - post_rows
+    orphan_rows_post = post_rows - pre_rows
+    #need more attention and testing
+    same_rows = list(pre_rows - orphan_rows_pre)
+    
+    if not orphan_rows_pre and not orphan_rows_post:
+        return True, True, True
+    else:
+        is_pre_orphan = False
+        is_post_orphan = False
         
+        if orphan_rows_pre:
+            is_pre_orphan = True
+            df_orphan_rows_pre = df_pre.drop(same_rows)
+            df_orphan_rows_pre.to_csv('orphan_rows_pre.csv')
+            df_pre = df_pre.drop(list(orphan_rows_pre))
+        if orphan_rows_post:
+            is_post_orphan = True
+            df_orphan_rows_post = df_post.drop(same_rows)
+            df_orphan_rows_post.to_csv('orphan_rows_post.csv')
+            df_post = df_post.drop(list(orphan_rows_post))
+    return False, is_pre_orphan, is_post_orphan
+
+
         
         
