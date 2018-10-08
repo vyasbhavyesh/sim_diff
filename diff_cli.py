@@ -126,6 +126,12 @@ def orphan_rows(df_pre, df_post):
             df_post = df_post.drop(list(orphan_rows_post))
     return False, [is_pre_orphan, df_orphan_rows_pre], [is_post_orphan, df_orphan_rows_post], df_pre, df_post
 
-
-        
-        
+def drop_tolerance(diff_data, tolerance):
+    l = len(diff_data)
+    for item in diff_data:
+        if abs(item[2] - item[3]) < tolerance:
+            diff_data.remove(item)
+    if not l == len(diff_data):
+        drop_tolerance(diff_data)
+    
+    return diff_data

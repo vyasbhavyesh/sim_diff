@@ -23,6 +23,6 @@ def get_diff_summary(diff_data, col_diff, col_orphan_pre, col_orphan_post, row_d
     
     for key in diff_cols.keys():
         summary += '\t' + key + '- ' + str(diff_cols[key]) +'\n'
-        
     
-    
+    with open('summary.txt', 'w') as s:
+        s.write(summary)
