@@ -7,6 +7,7 @@ driver sim diff
 """
 import diff_cli as cli
 import diff_repr
+import diff_summary
 
 print("Choose file type\n 1- CSV\n 2- Excel")
 file_type = int(input())
@@ -41,3 +42,5 @@ diff_data = []
 diff_data = [[col,i,pre[col].iloc[i],post[col].iloc[i]] for col in pre.columns for i in range(len(pre[col])) if pre[col].iloc[i] != post[col].iloc[i]]
 
 diff_repr.diff_repr(diff_data, pre.columns, pre, post)
+
+diff_summary.get_diff_summary(diff_data, col_diff, col_orphan_pre, col_orphan_post, row_diff, row_orphan_pre, row_orphan_post)
