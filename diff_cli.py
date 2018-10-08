@@ -96,6 +96,8 @@ def orphan_rows(df_pre, df_post):
     pre_rows = set(df_pre.index.copy())
     post_rows = set(df_post.index.copy())
     
+    df_orphan_rows_pre = pd.DataFrame()
+    df_orphan_rows_post = pd.DataFrame()
     
     orphan_rows_pre = pre_rows-post_rows
     orphan_rows_post = post_rows-pre_rows
@@ -108,15 +110,19 @@ def orphan_rows(df_pre, df_post):
         is_pre_orphan = False
         is_post_orphan = False
         
+        
+        
         if orphan_rows_pre:
             is_pre_orphan = True
             df_orphan_rows_pre = df_pre.drop(same_rows)
             df_orphan_rows_pre.to_csv('orphan_rows_pre.csv')
+            print('Oprhan Row in pre written')
             df_pre = df_pre.drop(list(orphan_rows_pre))
         if orphan_rows_post:
             is_post_orphan = True
             df_orphan_rows_post = df_post.drop(same_rows)
             df_orphan_rows_post.to_csv('orphan_rows_post.csv')
+            print('Oprhan Row in post written')
             df_post = df_post.drop(list(orphan_rows_post))
     return False, [is_pre_orphan, df_orphan_rows_pre], [is_post_orphan, df_orphan_rows_post], df_pre, df_post
 
