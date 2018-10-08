@@ -89,7 +89,7 @@ def orphan_cols(df_pre, df_post):
             df_post = df_post.drop(list(orphan_cols_post),axis =1)
             is_post_orphan = True
         
-        return False, is_pre_orphan, is_post_orphan, df_pre, df_post
+        return False, [is_pre_orphan, orphan_cols_pre], [is_post_orphan, orphan_cols_post], df_pre, df_post
 
 
 def orphan_rows(df_pre, df_post):
@@ -118,7 +118,7 @@ def orphan_rows(df_pre, df_post):
             df_orphan_rows_post = df_post.drop(same_rows)
             df_orphan_rows_post.to_csv('orphan_rows_post.csv')
             df_post = df_post.drop(list(orphan_rows_post))
-    return False, is_pre_orphan, is_post_orphan, df_pre, df_post
+    return False, [is_pre_orphan, df_orphan_rows_pre], [is_post_orphan, df_orphan_rows_post], df_pre, df_post
 
 
         
