@@ -35,7 +35,7 @@ def get_drop_cols(cols):
 
 def get_tolerance():
     print("Give tolerance for decimal comparission :")
-    tolerance = int(input())
+    tolerance = float(input())
     
     if tolerance:
         return tolerance
@@ -63,18 +63,24 @@ def hande_unimportant(df_pre, df_post, unimportant_cols):
     df_pre = df_pre.drop(unimportant_cols,axis =1)
     df_post = df_post.drop(unimportant_cols,axis =1)
     
+    return df_pre, df_post
+    
 def orphan_cols(df_pre, df_post):
-    if df_pre.colums == df_post.columns:
+    if list(df_pre.columns) == list(df_post.columns):
         return True, True, True
     else:
         is_pre_orphan = False
         is_post_orphan = False
         
-        df_pre_cols = set(df_pre.colums)
+        df_pre_cols = set(df_pre.columns)
         df_post_cols = set(df_post.columns)
         
         orphan_cols_pre = df_pre_cols - df_post_cols
+        print("Orphan columns in pre file:")
+        print(orphan_cols_pre)
         orphan_cols_post = df_post_cols - df_pre_cols
+        print("Orphan columns in post file:")
+        print(orphan_cols_post)
         
         if orphan_cols_pre:
             df_pre = df_pre.drop(list(orphan_cols_pre),axis =1)
@@ -83,7 +89,7 @@ def orphan_cols(df_pre, df_post):
             df_post = df_post.drop(list(orphan_cols_post),axis =1)
             is_post_orphan = True
         
-        return False, is_pre_orphan, is_post_orphan
+        return False, is_pre_orphan, is_post_orphan, df_pre, df_post
 
 
 def orphan_rows(df_pre, df_post):
@@ -91,8 +97,8 @@ def orphan_rows(df_pre, df_post):
     post_rows = set(df_post.index.copy())
     
     
-    orphan_rows_pre = pre_rows - post_rows
-    orphan_rows_post = post_rows - pre_rows
+    orphan_rows_pre = pre_rows-post_rows
+    orphan_rows_post = post_rows-pre_rows
     #need more attention and testing
     same_rows = list(pre_rows - orphan_rows_pre)
     
@@ -112,7 +118,7 @@ def orphan_rows(df_pre, df_post):
             df_orphan_rows_post = df_post.drop(same_rows)
             df_orphan_rows_post.to_csv('orphan_rows_post.csv')
             df_post = df_post.drop(list(orphan_rows_post))
-    return False, is_pre_orphan, is_post_orphan
+    return False, is_pre_orphan, is_post_orphan, df_pre, df_post
 
 
         

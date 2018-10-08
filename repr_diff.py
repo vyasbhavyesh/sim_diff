@@ -103,10 +103,10 @@ df_final.style.apply(col_df, axis=None).to_excel('styled.xlsx', engine='openpyxl
 
 
 def drop_rows_diff(df1,df2):
-    df1_rows = df1.index.copy()
-    df2_rows = df2.index.copy()
-    l1 = len(df1)
-    l2 = len(df2)
+    df1_rows = df_pre.index.copy()
+    df2_rows = df_post.index.copy()
+    l1 = len(df1_rows)
+    l2 = len(df2_rows)
     df1_m_df2 =set(df1_rows) - set(df2_rows)
     df2_m_df1 =set(df2_rows) - set(df1_rows) 
     
