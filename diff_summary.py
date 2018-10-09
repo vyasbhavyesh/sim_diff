@@ -6,7 +6,7 @@ Created on Mon Oct  8 18:39:45 2018
 """
 from collections import Counter
 
-def get_diff_summary(diff_data, col_diff, col_orphan_pre, col_orphan_post, row_diff, row_orphan_pre, row_orphan_post ):
+def get_diff_summary(diff_data, col_diff, col_orphan_pre, col_orphan_post, row_diff, row_orphan_pre, row_orphan_post, dest_path ):
     no_of_diffs = len(diff_data)
     diff_cols = Counter([col_name[0] for col_name in diff_data])
     no_of_diff_cols = len(diff_cols)
@@ -24,5 +24,5 @@ def get_diff_summary(diff_data, col_diff, col_orphan_pre, col_orphan_post, row_d
     for key in diff_cols.keys():
         summary += '\t' + key + '- ' + str(diff_cols[key]) +'\n'
     
-    with open('summary.txt', 'w') as s:
+    with open(dest_path + 'diff_summary.txt', 'w') as s:
         s.write(summary)

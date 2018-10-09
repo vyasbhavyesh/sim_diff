@@ -5,6 +5,7 @@ Created on Fri Oct  5 16:50:09 2018
 @author: bhavyas
 """
 import pandas as pd
+import os
 
 def get_file_names():
     print("Pre/Source File Path :")
@@ -92,7 +93,7 @@ def orphan_cols(df_pre, df_post):
         return False, [is_pre_orphan, orphan_cols_pre], [is_post_orphan, orphan_cols_post], df_pre, df_post
 
 
-def orphan_rows(df_pre, df_post):
+def orphan_rows(df_pre, df_post, dest_path):
     pre_rows = set(df_pre.index.copy())
     post_rows = set(df_post.index.copy())
     
@@ -115,13 +116,13 @@ def orphan_rows(df_pre, df_post):
         if orphan_rows_pre:
             is_pre_orphan = True
             df_orphan_rows_pre = df_pre.drop(same_rows)
-            df_orphan_rows_pre.to_csv('orphan_rows_pre.csv')
+            df_orphan_rows_pre.to_csv(dest_path + 'orphan_rows_pre.csv')
             print('Oprhan Row in pre written')
             df_pre = df_pre.drop(list(orphan_rows_pre))
         if orphan_rows_post:
             is_post_orphan = True
             df_orphan_rows_post = df_post.drop(same_rows)
-            df_orphan_rows_post.to_csv('orphan_rows_post.csv')
+            df_orphan_rows_post.to_csv(dest_path + 'orphan_rows_post.csv')
             print('Oprhan Row in post written')
             df_post = df_post.drop(list(orphan_rows_post))
     return False, [is_pre_orphan, df_orphan_rows_pre], [is_post_orphan, df_orphan_rows_post], df_pre, df_post
@@ -135,3 +136,10 @@ def drop_tolerance(diff_data, tolerance):
         drop_tolerance(diff_data)
     
     return diff_data
+
+def get_report_dest():
+    print("Enter the destination for report: ")
+    dest_path = input()
+    os.mkdir('report')
+    
+    return dest_path + '\\report\\'

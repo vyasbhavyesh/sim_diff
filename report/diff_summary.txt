@@ -1,0 +1,37 @@
+Summary of Comparision
+
+Total number of different elements: 750
+
+Total number of columns having differences: 17
+
+Orphan Rows: False
+
+Orphan Rows Pre: False No. of rows- 0
+
+Orphan Rows Post: True No. of rows- 1
+
+Orphan Columns: False
+
+Orphan Columns Pre: True Names- test_dif
+
+Orphan Columns Post: False Names-
+
+Number of different elements per columns:
+
+	contract_price- 14
+	pnl- 116
+	plan_ccy_mtm_undisc- 14
+	plan_ccy_pnl_undisc- 116
+	funct_ccy_realized- 14
+	funct_ccy_total_value- 14
+	funct_ccy_pnl- 116
+	funct_ccy_realized_undisc- 14
+	funct_ccy_total_value_undisc- 14
+	funct_ccy_pnl_undisc- 116
+	plan_ccy_mtm- 14
+	plan_ccy_pnl- 116
+	plan_ccy_realized- 14
+	plan_ccy_realized_undisc- 14
+	plan_ccy_total_value- 14
+	plan_ccy_total_value_undisc- 14
+	broker_id- 16

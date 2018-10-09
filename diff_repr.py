@@ -18,7 +18,7 @@ def col_df(df_final, z = []):
     return df1
 
 
-def diff_repr(diff_data,cols,df_pre,df_post):
+def diff_repr(diff_data, cols, df_pre, df_post, dest_path):
     df_diff = pd.DataFrame(diff_data,columns = ['column','row','pre_value','post_value'])
     diff_cols = [col for col in cols if col in set(df_diff['column'])]
     same_cols = [col for col in cols if col not in set(df_diff['column'])]
@@ -46,4 +46,4 @@ def diff_repr(diff_data,cols,df_pre,df_post):
     df_final['unique'] = range(1, len(df_final.index)+1)
     df_final = df_final.set_index('unique', append=True)
 
-    df_final.style.apply(col_df, z = diff_cols_z, axis=None).to_excel('styled.xlsx', engine='openpyxl')
+    df_final.style.apply(col_df, z = diff_cols_z, axis=None).to_excel(dest_path + 'diff_report.xlsx', engine='openpyxl')
