@@ -6,6 +6,7 @@ Created on Fri Oct  5 16:50:09 2018
 """
 import pandas as pd
 import os
+import path_files
 
 def get_file_names():
     print("Pre/Source File Path :")
@@ -68,7 +69,7 @@ def hande_unimportant(df_pre, df_post, unimportant_cols):
     
 def orphan_cols(df_pre, df_post):
     if list(df_pre.columns) == list(df_post.columns):
-        return True, True, True
+        return False, False, False
     else:
         is_pre_orphan = False
         is_post_orphan = False
@@ -90,7 +91,7 @@ def orphan_cols(df_pre, df_post):
             df_post = df_post.drop(list(orphan_cols_post),axis =1)
             is_post_orphan = True
         
-        return False, [is_pre_orphan, orphan_cols_pre], [is_post_orphan, orphan_cols_post], df_pre, df_post
+        return True, [is_pre_orphan, orphan_cols_pre], [is_post_orphan, orphan_cols_post], df_pre, df_post
 
 
 def orphan_rows(df_pre, df_post, dest_path):
@@ -106,7 +107,7 @@ def orphan_rows(df_pre, df_post, dest_path):
     same_rows = list(pre_rows - orphan_rows_pre)
     
     if not orphan_rows_pre and not orphan_rows_post:
-        return True, True, True
+        return False, False, False
     else:
         is_pre_orphan = False
         is_post_orphan = False
@@ -125,7 +126,7 @@ def orphan_rows(df_pre, df_post, dest_path):
             df_orphan_rows_post.to_csv(dest_path + 'orphan_rows_post.csv')
             print('Oprhan Row in post written')
             df_post = df_post.drop(list(orphan_rows_post))
-    return False, [is_pre_orphan, df_orphan_rows_pre], [is_post_orphan, df_orphan_rows_post], df_pre, df_post
+    return True, [is_pre_orphan, df_orphan_rows_pre], [is_post_orphan, df_orphan_rows_post], df_pre, df_post
 
 def drop_tolerance(diff_data, tolerance):
     l = len(diff_data)
@@ -143,3 +144,13 @@ def get_report_dest():
     os.mkdir('report')
     
     return dest_path + '\\report\\'
+
+def get_folder_paths():
+    print('Enter path of pre folder')
+    pre_path = input()
+    pre_files = path_files.get_folder_files(pre_path)
+    print('Enter path of post folder')
+    post_path = input()
+    post_files = path_files.get_folder_files(post_path)
+
+    return pre_files, post_files
