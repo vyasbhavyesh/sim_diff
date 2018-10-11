@@ -16,9 +16,24 @@ if not pre_files == post_files:
     post_files = set(post_files) - extra_post
 
 
+print("Choose file type\n 1- CSV\n 2- Excel")
+file_type = int(input())
+
+if file_type == 1:    
+    pre, post = cli.read_csv_input(pre_files[0], post_files[0])
+elif file_type == 2:    
+    pre, post = cli.read_xls_input(pre_files[0], post_files[0])    
+
+cols = list(pre.columns)
+    
+primary_key = cli.get_pri_key(cols)
+unimportant_cols = cli.get_drop_cols(cols)
+tolerance = cli.get_tolerance()
+dest_path = cli.get_report_dest()
 
 for file in pre_files:
     pre_file = file
     post_file = file
-
+    
+    
     

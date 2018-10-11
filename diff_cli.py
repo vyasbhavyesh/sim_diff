@@ -69,7 +69,7 @@ def hande_unimportant(df_pre, df_post, unimportant_cols):
     
 def orphan_cols(df_pre, df_post):
     if list(df_pre.columns) == list(df_post.columns):
-        return False, False, False
+        return False, [False, False],[False, False],df_pre,df_post
     else:
         is_pre_orphan = False
         is_post_orphan = False
@@ -107,7 +107,7 @@ def orphan_rows(df_pre, df_post, dest_path):
     same_rows = list(pre_rows - orphan_rows_pre)
     
     if not orphan_rows_pre and not orphan_rows_post:
-        return False, False, False
+        return False, [False, False],[False, False],df_pre,df_post
     else:
         is_pre_orphan = False
         is_post_orphan = False
@@ -126,7 +126,7 @@ def orphan_rows(df_pre, df_post, dest_path):
             df_orphan_rows_post.to_csv(dest_path + 'orphan_rows_post.csv')
             print('Oprhan Row in post written')
             df_post = df_post.drop(list(orphan_rows_post))
-    return True, [is_pre_orphan, df_orphan_rows_pre], [is_post_orphan, df_orphan_rows_post], df_pre, df_post
+    return True, [is_pre_orphan, len(df_orphan_rows_pre)], [is_post_orphan, len(df_orphan_rows_post)], df_pre, df_post
 
 def drop_tolerance(diff_data, tolerance):
     l = len(diff_data)
@@ -141,7 +141,7 @@ def drop_tolerance(diff_data, tolerance):
 def get_report_dest():
     print("Enter the destination for report: ")
     dest_path = input()
-    os.mkdir('report')
+    os.mkdir(dest_path + '\\'+ 'report')
     
     return dest_path + '\\report\\'
 
