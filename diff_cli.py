@@ -19,7 +19,7 @@ def get_file_names():
 
 def get_pri_key(cols):
     for i in range(len(cols)):
-        print(str(i) + '- ' + cols[i])
+        print(str(i) + '- ' + str(cols[i]))
     print("\nSelect col no. for primary keys :")
     primary_key_no = list(map(int, input().strip().split()))
     primary_key = [cols[i] for i in primary_key_no]
@@ -28,7 +28,7 @@ def get_pri_key(cols):
 
 def get_drop_cols(cols):
     for i in range(len(cols)):
-        print(str(i) + '- ' + cols[i])
+        print(str(i) + '- ' + str(cols[i]))
     print("\nSelect col no. of unimportent columns :")
     col_no = list(map(int, input().strip().split()))
     drop_cols = [cols[i] for i in col_no]
@@ -51,6 +51,14 @@ def read_csv_input(pre_path, post_path):
     
     return df_pre, df_post
 
+def read_csv_input_without_header(pre_path, post_path):
+    df_pre = pd.read_csv(pre_path, low_memory = False, header= None)
+    col_pre = [str(i) for i in df_pre.columns]
+    df_pre.columns = col_pre
+    df_post = pd.read_csv(post_path, low_memory = False, header= None)
+    col_post = [str(i) for i in df_post.columns]
+    df_post.columns = col_post
+    return df_pre, df_post
 
 def read_xls_input(pre_path, post_path):
     df_pre = pd.read_excel(pre_path, low_memory = False)
@@ -131,8 +139,9 @@ def orphan_rows(df_pre, df_post, dest_path):
 def drop_tolerance(diff_data, tolerance):
     l = len(diff_data)
     for item in diff_data:
-        if abs(item[2] - item[3]) < tolerance:
-            diff_data.remove(item)
+        if type(item[2]) == float:
+            if abs(item[2] - item[3]) < tolerance:
+                diff_data.remove(item)
     if not l == len(diff_data):
         drop_tolerance(diff_data)
     
