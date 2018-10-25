@@ -6,8 +6,7 @@ Created on Tue Oct 23 13:11:10 2018
 @author: babavyas
 """
 import pandas as pd
-from collections import defaultdict
-import time as t
+
 class sim_diff:
     def __init__(self,pre_path,post_path,primary_key,unimportant_cols,tolerance,dest):
         self.pre_file = pre_path
@@ -115,39 +114,33 @@ class sim_diff:
         same_cols = [d for u in same_cols for d in u]
 
         #all_cols = diff_cols + same_cols
-        self.final = pd.DataFrame(columns = diff_cols ,index = self.pre.index.copy())
+        self.final_diff = pd.DataFrame(columns = diff_cols ,index = self.pre.index.copy())
+        self.final_same = pd.DataFrame(columns = same_cols ,index = self.pre.index.copy())
 
         
-        for col in self.final.columns:
+        for col in self.final_diff.columns:
             if  'POST' in col:
-                self.final[col] = self.post[col.replace('POST_','')]
-        for col in self.final.columns:
+                self.final_diff[col] = self.post[col.replace('POST_','')]
+        for col in self.final_diff.columns:
+             if 'PRE' in col:
+                self.final_diff[col] = self.pre[col.replace('PRE_','')]
+    
+        self.final_diff['unique'] = range(1, len(self.final.index)+1)
+        self.final_diff = self.final_same.set_index('unique', append=True)
+        
+        for col in self.final_same.columns:
+            if  'POST' in col:
+                self.final_same[col] = self.post[col.replace('POST_','')]
+        for col in self.final_same.columns:
              if 'PRE' in col:
                 self.final[col] = self.pre[col.replace('PRE_','')]
     
-        self.final['unique'] = range(1, len(self.final.index)+1)
-        self.final = self.final.set_index('unique', append=True)
+        self.final_same['unique'] = range(1, len(self.final.index)+1)
+        self.final_same = self.final_same.set_index('unique', append=True)
         
     
     def _summary(self):
         pass
-    
-    
-    def _to_html(self):
-        pass
-    def _final(self):
-        t1 = t.time()
-        self.final = pd.DataFrame(index = self.pre.index.copy())
-        for col in self.pre.columns:
-            self.final['PRE_'+col] = self.pre[col]
-            self.final['POST_'+col] = self.post[col]
-            for i in range(len(self.pre[col])):
-                if self.pre[col].iloc[i] != self.post[col].iloc[i]:
-                    self.final['PRE_'+col].iloc[i] = '<font color = red>{0}</font>'.format(self.pre[col].iloc[i])
-                    self.final['POST_'+col].iloc[i] = '<font color = red>{0}</font>'.format(self.post[col].iloc[i])
-                    self.diff_data.append([col,i,self.pre[col].iloc[i],self.post[col].iloc[i]])
-        self.final.to_html('tt.html',escape = False)
-        t2 = t.time()
-        print(t2-t1)
+
         
         
