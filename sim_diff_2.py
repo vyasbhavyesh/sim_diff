@@ -11,14 +11,16 @@ class sim_diff:
     def __init__(self,pre_path,post_path,primary_key,unimportant_cols,tolerance,dest):
         self.pre_file = pre_path
         self.post_file = post_path
-        self.pre = pd.read_csv(self.pre_file, low_memory = False)
-        self.post = pd.read_csv(self.post_file, low_memory = False)
         self.primary_key = primary_key
         self.unimportant_cols = unimportant_cols
         self.tolerance = tolerance
         self.dest = dest
         self.diff_data = []
         self.final = pd.DataFrame()
+    
+    def _load_csv(self):
+        self.pre = pd.read_csv(self.pre_file, low_memory = False)
+        self.post = pd.read_csv(self.post_file, low_memory = False)
     
     def _handle_unimportant(self):
         self.pre = self.pre.fillna(0)
@@ -103,6 +105,10 @@ class sim_diff:
     
     
     def _diff_repr(self):
+        
+        if not self.diff_data:
+            return "No differences in files"
+        
         self.diff = pd.DataFrame(self.diff_data,columns = ['column','row','pre_value','post_value'])
         diff_cols = [col for col in self.pre.columns if col in set(self.diff['column'])]
         same_cols = [col for col in self.pre.columns if col not in set(self.diff['column'])]
@@ -127,6 +133,7 @@ class sim_diff:
     
         self.final_diff['unique'] = range(1, len(self.final.index)+1)
         self.final_diff = self.final_same.set_index('unique', append=True)
+        
         
         for col in self.final_same.columns:
             if  'POST' in col:

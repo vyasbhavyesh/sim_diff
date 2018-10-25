@@ -62,6 +62,7 @@ def mode_2():
         dest_path_i = dest_path + pre_files[i].stem + '\\'
         os.mkdir(dest_path_i)
         print("Working on file:"+ str(pre_file.stem))
+                    
         single_compare.single_compare(pre, post, unimportant_cols, primary_key, tolerance, dest_path_i)
         print("Report generated for file:"+ str(pre_file.stem))
         
