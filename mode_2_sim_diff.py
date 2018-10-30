@@ -7,6 +7,7 @@ Created on Tue Oct  9 14:13:16 2018
 import diff_cli as cli
 import os
 import single_compare
+import pandas as pd
 
 def mode_2():
     
@@ -50,6 +51,21 @@ def mode_2():
     tolerance = cli.get_tolerance()
     dest_path = cli.get_report_dest()
     
+    
+    pfolio_data = {'Portfolio': [],
+                   'Match/Mismatch Columns': [],
+                   'Mismatch Columns Count':[],
+                   'Orphan Rows': [],
+                   'PRE_Oprhan Count':[],
+                   'POST_Oprhan Count':[]
+                }
+    
+    diff_data_collated = {'Portfolio':[],
+                          'Column Name':[],
+                          'Number of differences':[],
+                          'Sample deal num':[]
+                    }
+    
     for i  in range(len(pre_files)):
         pre_file = pre_files[i]
         post_file = post_files[i]
@@ -59,12 +75,79 @@ def mode_2():
             pre, post = cli.read_csv_input(pre_file, post_file)
         elif file_type == 2:
             pre, post = cli.read_xls_input(pre_file, post_file)
+        
+        
+        
         dest_path_i = dest_path + pre_files[i].stem + '\\'
-        os.mkdir(dest_path_i)
+        
         print("Working on file:"+ str(pre_file.stem))
                     
-        single_compare.single_compare(pre, post, unimportant_cols, primary_key, tolerance, dest_path_i)
+        diff_data, row_diff, row_orphan_pre, row_orphan_post \
+        = single_compare.single_compare(pre, post, unimportant_cols, \
+                                        primary_key, tolerance, dest_path_i)
+        diff_data_formated = {}
+        for row in diff_data:
+            if row[0] not in diff_data_formated.keys():
+                diff_data_formated[row[0]] = [row[1]]
+            else:
+                diff_data_formated[row[0]].append(row[1])
+        
+        
+        if diff_data:
+            pfolio_data['Portfolio'].append(pre_file.stem)
+            pfolio_data['Match/Mismatch Columns'].append('Mismatch')
+            pfolio_data['Mismatch Columns Count'].append(len(diff_data_formated.keys()))
+            pfolio_data['Orphan Rows'].append(row_diff)
+            pfolio_data['PRE_Oprhan Count'].append(row_orphan_pre[1])
+            pfolio_data['POST_Oprhan Count'].append(row_orphan_post[1])
+        elif diff_data and not row_diff:
+            pfolio_data['Portfolio'].append(pre_file.stem)
+            pfolio_data['Match/Mismatch Columns'].append('Match')
+            pfolio_data['Mismatch Columns Count'].append(len(diff_data_formated.keys()))
+            pfolio_data['Orphan Rows'].append(row_diff)
+            pfolio_data['PRE_Oprhan Count'].append(row_orphan_post[1])
+            pfolio_data['POST_Oprhan Count'].append(row_orphan_post[1])
+        elif not diff_data and row_diff:
+            pfolio_data['Portfolio'].append(pre_file.stem)
+            pfolio_data['Match/Mismatch Columns'].append('Match')
+            pfolio_data['Mismatch Columns Count'].append(0)
+            pfolio_data['Orphan Rows'].append(row_diff)
+            pfolio_data['PRE_Oprhan Count'].append(row_orphan_pre[1])
+            pfolio_data['POST_Oprhan Count'].append(row_orphan_post[1])
+        elif not diff_data and not row_diff:
+            pfolio_data['Portfolio'].append(pre_file.stem)
+            pfolio_data['Match/Mismatch Columns'].append('Match')
+            pfolio_data['Mismatch Columns Count'].append(0)
+            pfolio_data['Orphan Rows'].append(row_diff)
+            pfolio_data['PRE_Oprhan Count'].append(row_orphan_post[1])
+            pfolio_data['POST_Oprhan Count'].append(row_orphan_post[1])
+            
+        if diff_data_formated:
+            for col in diff_data_formated.keys():
+                diff_data_collated['Portfolio'].append(pre_file.stem)
+                diff_data_collated['Column Name'].append(col)
+                diff_data_collated['Number of differences'].append(len(diff_data_formated[col]))
+                diff_data_collated['Sample deal num'].append(pre['deal_num'].iloc[diff_data_formated[col][0]])
+        
+        
         print("Report generated for file:"+ str(pre_file.stem))
         
+    df1 = pd.DataFrame().from_dict(pfolio_data)
+    df2 = pd.DataFrame().from_dict(diff_data_collated)
+    
+    df1 = df1.sort_values(['Match/Mismatch Columns'])
+    
+    writer = pd.ExcelWriter(dest_path + pre_file.parent.name + '.xlsx')
+    df1.to_excel(writer,'Folder Details', index = False)
+    df2.to_excel(writer,'Portfolio Details', index = False)
+    writer.save()
+
+    
+    
+    
+    
+    
+    
+    
 
     

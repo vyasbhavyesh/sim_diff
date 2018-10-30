@@ -117,6 +117,7 @@ def orphan_rows(df_pre, df_post, dest_path):
     if not orphan_rows_pre and not orphan_rows_post:
         return False, [False, False],[False, False],df_pre,df_post
     else:
+        os.mkdir(dest_path)
         is_pre_orphan = False
         is_post_orphan = False
         

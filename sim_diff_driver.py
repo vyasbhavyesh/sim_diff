@@ -19,6 +19,7 @@ elif mode == 2:
     mode_2.mode_2()
     t2 = time.time()
     
+    print('Total Time taken in Seconds')
     print(t2-t1)
 elif mode == 3:
     print("Under construction")
