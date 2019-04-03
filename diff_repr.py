@@ -46,7 +46,7 @@ def diff_repr(diff_data, cols, df_pre, df_post, dest_path):
             final_diff[col] = df_pre[col.replace('PRE_','')]
 
     #final_diff['unique'] = range(1, len(final_diff.index)+1)
-   # final_diff = final_same.set_index('unique', append=True)
+    #final_diff = final_same.set_index('unique', append=True)
     final_diff.to_csv(dest_path+'different.csv')
     
     for col in final_same.columns:

@@ -45,9 +45,6 @@ def single_compare(pre, post, unimportant_cols, primary_key, tolerance, dest_pat
     t2 = t.time()
     print("Time(m) of diff_data = " + str((t2-t1)/60))
     '''
-    if diff_data:
-        os.mkdir(dest_path)
-    t1 = t.time()
     diff_repr.diff_repr(diff_data, pre.columns, pre, post, dest_path)
     t2 = t.time()
     print("Time(m) of diff_repr = " + str((t2-t1)/60))
